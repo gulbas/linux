@@ -1,0 +1,47 @@
+1.
+cd /
+ls -l /etc 
+ls -l /proc
+ls 
+cat /etc/passwd
+cat /etc/timezone
+less /etc/hosts
+
+2.
+mkdir /tmp/test/
+cd /tmp/test/
+touch file{1..2}_hw2.txt
+echo "text1" > file1_hw2.txt
+echo "text2" > file2_hw2.txt
+cat file2_hw2.txt file1_hw2.txt > file_final_hw2.txt
+cat file_final_hw2.txt
+cp file_final_hw2.txt cp_file_final_end_hw2.txt
+
+3.
+touch file_2_1.txt
+cat > file_2_2.txt
+echo "Hello World" > file_2_3.txt
+mkdir task3
+mv file_2_?.txt task3/
+rm -r *
+
+4.
+ls -A ~/ | grep '^\.' | wc
+find  ~/ -maxdepth 1 -name '.*' | wc
+
+5.
+touch test.txt test_error.txt
+cat /etc/* 1>>test.txt 2>>test_error.txt
+less test_error.txt | wc
+
+6.
+ps U gdm
+
+7.
+kill -1 30416 информирует программу о потери связи с терминалом. Ситуация часто возникала в прошлом, в режиме терминального доступа.
+kill -15 30665 вежливая просьба программе завершить работу. Программа может сохранить данные и т.д.
+kill -11 31006 формируется при попытке программы обратиться к не принадлежащей ей области памяти. Обычно выводится сообщение «Segmentation fault» и сохраняется дамп памяти. Как правило, такое случается в результате ошибок программиста при работе с указателями.
+kill -9 31055 безусловное завершение программы. Сигнал не может быть перехвачен программой, потому позволяет её остановить в любом случае (но не позволит снять процесс-зомби).
+
+8.
+lsof -u nbsp | less
