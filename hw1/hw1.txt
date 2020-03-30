@@ -1,0 +1,6 @@
+sudo apt-get update 
+sudo apt-get install gcc make perl openssh-server vim -y
+sudo apt-get upgrade
+ip a
+sudo ufw allow 22
+ssh-keygen
