@@ -1,0 +1,44 @@
+1. 
+echo "home work 3" > file1
+cp file1 file2
+ln -s file1 file3
+ls -ila
+rm file1
+cat file2 - ok
+cat file3 - cat: file: No such file or directory
+cat: 3: No such file or directory
+cat file4 - ok
+
+2. 
+mv file2 newfile2
+mv file3 newfile3
+mv file4 newfile4
+ln -s newfile2 link4newfile2
+mkdir anotherdir
+mv newfile3 anotherdir/
+mv link4newfile2 anotherdir/
+mv newfile4 anotherdir/
+cat anotherdir/link4newfile2 - cat: anotherdir/link4newfile2: No such file or directory
+cat anotherdir/newfile3 - cat: anotherdir/newfile3: No such file or directory
+cat anotherdir/newfile4 - ok
+
+3. 
+touch arbitraryfile1 arbitraryfile2
+chmod ug=rw,o=r arbitraryfile1
+chmod -R 664 arbitraryfile1
+chmod -R 600 arbitraryfile2
+chmod u=rw,go=--- arbitraryfile2
+
+4.
+sudo useradd -s /bin/bash -G sudo superpuperuser -p $(openssl passwd fuckingcoronavirus) -d /home/superpuperuser -m
+
+5.
+sudo su
+addgroup developer
+useradd user5 -s /bin/bash -m
+useradd user6 -s /bin/bash -m
+usermod -aG developer user1
+usermod -aG developer user2
+mkdir directoryforwork
+chgrp developer directoryforwork/
+chmod g=rws,o= directoryforwork/
