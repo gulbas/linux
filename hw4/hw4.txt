@@ -1,0 +1,14 @@
+1.
+grep -P '^((25[0-5]|2[0-4]\d|1\d{2}|[1-9]\d|\d)\.?){4}$' test_data.txt
+
+2. 
+grep -P '^[^/]+\.(jpg|png|gif)$' test_data.txt
+
+3.
+grep -P '^https?:\/\/(www\.)?[[:alnum:]]+\.[[:alpha:]]{0,10}.*\/[^/]+\.(jpg|png|gif)$' test_data.txt
+
+4.
+grep -P '^(?!(255|127|1?0)\.|192\.168|172\.(3[01]|2\d|1[6-9])|169\.254)((25[0-5]|2[0-4]\d|1\d{2}|[1-9]\d|\d)\.?){4}$' test_data.txt
+
+5. 
+grep -P '^https?:\/\/(www\.)?[[:alnum:]]+\.[[:alpha:]]{0,10}.*\/[^/]+\.[^/.]+(?<!\.(jpg|png|gif))$' test_data.txt
