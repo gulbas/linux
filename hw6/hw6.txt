@@ -1,0 +1,65 @@
+Задание 1
+
+1.
+sudo apt install -y ufw
+sudo ufw allow http или sudo ufw allow 80
+sudo ufw allow https или sudo ufw allow 443
+
+2.
+sudo apt update 
+sudo install nginx
+sudo vim /etc/nginx/conf.d/ubuntu.conf
+
+3.
+server{
+        listen 80;
+        server_name ubuntu;
+
+        location / {
+         if ($http_name != 'User') {
+                return 404 "Not found";
+         }
+         return 200 "Hi $http_name!";
+        }
+}
+
+sudo systemctl restart nginx
+curl -D - localhost -H "Host: ubuntu" -H "name: User"
+
+Задание 2
+
+1.
+Самоподписанный сертификат - это сертификат открытого ключа, изданный и подписанный тем же лицом,
+которое он иденфицирует.
+
+sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/private/nginx-selfsigned.key -out /etc/ssl/certs/nginx-selfsigned.crt
+
+2.
+sudo vim /etc/nginx/snippets/self-signed.conf
+
+ssl_certificate /etc/ssl/certs/nginx-selfsigned.crt;
+ssl_certificate_key /etc/ssl/private/nginx-selfsigned.key
+
+sudo vim /etc/nginx/conf.d/ubuntu.conf
+
+server {
+        listen 80;
+        listen 443 ssl;
+
+        server_name ubuntu;
+
+        include snippets/self-signed.conf;
+
+        location / {
+                return 200 "Hi";
+        }
+}
+
+sudo nginx -t
+sudo systemctl restart nginx
+
+3.
+Warning: Potential Security Risk Ahead
+
+4.
+Ассиметричное шифрование ресурсоемко для использования.  
