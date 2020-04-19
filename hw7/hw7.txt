@@ -22,3 +22,5 @@ docker login
 docker tag gbhw7 nbsp/gbhw7:latest
 docker push nbsp/gbhw7:latest
 https://hub.docker.com/r/nbsp/gbhw7
+
+docker pull nbsp/gbhw7
