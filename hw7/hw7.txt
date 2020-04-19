@@ -1,0 +1,24 @@
+1. 
+FROM python:alpine
+
+ARG container_version=0.1
+ARG dir=hw7
+
+RUN apk update && apk upgrade && apk add git && apk add bash
+RUN mkdir -p /$dir/ && cd /$dir/ && git clone https://github.com/mtuktarov/linux_stuff.git ./
+RUN cd /$dir/django-test-app
+WORKDIR /$dir/django-test-app
+RUN pip install -r /$dir/django-test-app/requirements.txt
+RUN chmod +x /$dir/django-test-app/manage.py
+RUN rm -rf /$dir/django-test-app/requirements.txt
+RUN python /$dir/django-test-app/manage.py migrate #2 task
+CMD python manage.py runserver 0.0.0.0:8000
+
+3.
+docker run -it -p 80:8000 nbsp/gbhw7:latest
+
+4.
+docker login 
+docker tag gbhw7 nbsp/gbhw7:latest
+docker push nbsp/gbhw7:latest
+https://hub.docker.com/repository/docker/nbsp/gbhw7 
