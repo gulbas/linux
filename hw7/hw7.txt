@@ -21,4 +21,4 @@ docker run -it -p 80:8000 nbsp/gbhw7:latest
 docker login 
 docker tag gbhw7 nbsp/gbhw7:latest
 docker push nbsp/gbhw7:latest
-https://hub.docker.com/repository/docker/nbsp/gbhw7 
+https://hub.docker.com/r/nbsp/gbhw7
