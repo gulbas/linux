@@ -1,0 +1,3 @@
+1. Нужно запустить php приложение, которое находится по ссылке: [https://github.com/mtuktarov/linux_goodies/tree/master/docker/php](https://github.com/mtuktarov/linux_goodies/tree/master/docker/php "https://github.com/mtuktarov/linux_goodies/tree/master/docker/php")
+так, чтобы его основной функционал стал доступен - а именно добавление и удаление врачей из базы. Всего три контейнера - mysql, php:fpm и nginx.
+**hospital_db.sql** - этот файл содержит `sql` инстуркции, которые должны применяться при старте базы данных.

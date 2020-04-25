@@ -1,0 +1,129 @@
+sudo apt-get install -y python python-pip 
+pip install docker-compose 
+sudo apt  install docker-compose
+
+mkdir hw8 && mkdir -p hw8/src mkdir -p hw8/docker/nginx && mkdir hw8/docker/php-fpm && mkdir hw8/docker/mysql && git clone https://github.com/shehryarkn/PHP-MySQL-CRUD-Web-Application.git hw8/src/medibed && mkdir hw8/docker/nginx/conf.d/ && mkdir hw8/docker/nginx/sites
+
+cat > hw8/docker/mysql/Dockerfile << EOF
+FROM mysql:latest
+CMD ["mysqld"]
+EXPOSE 3306
+EOF
+
+cat > hw8/docker/nginx/Dockerfile << EOF
+FROM nginx:alpine
+CMD ["nginx"]
+EXPOSE 80 443
+EOF
+
+cat > hw8/docker/php-fpm/Dockerfile << EOF
+FROM php:fpm-alpine
+RUN docker-php-ext-install pdo_mysql
+CMD ["php-fpm"]
+EXPOSE 9000
+EOF
+
+cat > hw8/docker/nginx/conf.d/default.conf << EOF
+upstream php-upstream {
+     server php-fpm:9000;
+}
+EOF
+
+cat > hw8/docker/nginx/sites/default.conf << EOF
+server {
+    listen 80 default_server;
+    listen [::]:80 default_server ipv6only=on;
+    server_name localhost;
+    root /var/www;
+    index index.php index.html index.htm;
+    location / {
+         try_files \$uri \$uri/ /index.php\$is_args\$args;
+         gzip_static on;
+         autoindex on;
+    }
+    location ~ \.php$ {
+        try_files \$uri /index.php =404;
+        fastcgi_pass php-upstream;
+        fastcgi_index index.php;
+        fastcgi_buffers 16 16k;
+        fastcgi_buffer_size 32k;
+        fastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
+        #fixes timeouts
+        fastcgi_read_timeout 600;
+        include fastcgi_params;
+    }
+    location ~ /\.ht {
+        deny all;
+    }
+    location /.well-known/acme-challenge/ {
+        root /var/www/letsencrypt/;
+        log_not_found off;
+    }
+}
+EOF
+
+cat > hw8/docker/nginx/nginx.conf << EOF
+user  nginx;
+worker_processes  4;
+daemon off;
+error_log  /var/log/nginx/error.log warn;
+pid        /var/run/nginx.pid;
+events {
+    worker_connections  1024;
+}
+http {
+    include       /etc/nginx/mime.types;
+    default_type  application/octet-stream;
+    access_log  /var/log/nginx/access.log;
+    # Switch logging to console out to view via Docker
+    #access_log /dev/stdout;
+    #error_log /dev/stderr;
+    sendfile        on;
+    keepalive_timeout  65;
+
+    include /etc/nginx/conf.d/*.conf;
+    include /etc/nginx/sites-available/*.conf;
+}
+EOF
+
+
+
+cat > hw8/docker/docker-compose.yml << EOF
+version: '3'
+
+services:
+  php-fpm:
+    build:
+     context: ./php-fpm
+    volumes:
+      - ../src:/var/www
+  nginx:
+    ports:
+      - "80:80"
+      - "443:443"
+    build:
+     context: ./nginx
+    volumes:
+      - ../src:/var/www
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/sites/:/etc/nginx/sites-available
+      - ./nginx/conf.d/:/etc/nginx/conf.d
+    depends_on:
+      - php-fpm
+  mysql:
+    restart: always
+    build:
+     context: ./mysql
+    environment:
+      - MYSQL_DATABASE=hospital_db
+      - MYSQL_USER=myuser
+      - MYSQL_PASSWORD=secret
+      - MYSQL_ROOT_PASSWORD=docker
+    volumes:
+      - ./src/medibed/hospital_db.sql:/docker-entrypoint-initdb.d/hospital_db.sql
+    ports:
+      - "3306:3306"
+EOF
+
+cd hw8/docker/
+docker-compose up
